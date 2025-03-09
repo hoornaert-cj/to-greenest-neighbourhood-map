@@ -15,3 +15,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     console.log(document.getElementById("map")); // Debugging: Check if #map exists
 });
+
+function getColor(rank) {
+    return rank <= 20 ? '#1a9641' :
+           rank <= 40 ? '#a6d96a' :
+           rank <= 60 ? '#ffffbf' :
+           rank <= 80 ? '#fdae61' :
+           rank <= 100 ? '#d7191c' :
+                         '#800026';
+}
+
+L.geoJSON(geojsonData, {
+    style: function (feature) {
+        return {
+            fillColor: getColor(feature.properties.Rank),
+            weight: 1,
+            opacity: 1,
+            color: 'white',
+            fillOpacity: 0.7
+        };
+    }
+}).addTo(map);
