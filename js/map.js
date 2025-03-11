@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     },
                     onEachFeature: function (feature, layer) {
                         //tooltips
-                        layer.bindTooltip(feature.properties.AREA_NAME, {
+                        layer.bindTooltip(feature.properties.AREA_NAME + ' (Rank: ' + feature.properties.rank + ')', {
                             permanent: false,
                             direction: "top",
                             className: "neighbourhood-tooltip"

@@ -98,7 +98,8 @@ a:hover {
     animation: zoomIn 1s ease-out;
   }
 
-.leaflet-popup-content-wrapper {
+.leaflet-popup-content-wrapper,
+.neighbourhood-tooltip {
     background: linear-gradient(to bottom right, #4D9966, #338855, #1F7744, #0A6633, #005522);
     border: 0.5px solid #005522;
     color: #fcfcc0;
