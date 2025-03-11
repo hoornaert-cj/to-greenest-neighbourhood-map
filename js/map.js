@@ -40,8 +40,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             mouseover: function(e) {
                                 var layer = e.target;
                                 layer.setStyle({
-                                    fillColor: '#12263A',
-                                    fillOpacity: 0.7,
+                                    fillColor: '#FEFFBE',
+                                    fillOpacity: 0.25,
                                     dashArray: '5, 5',
                                     lineCap: 'round',
                                     lineJoin: 'round'
