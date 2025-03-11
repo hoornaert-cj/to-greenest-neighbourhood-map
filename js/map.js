@@ -61,7 +61,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
                 });
-
                 geoJsonLayer.addTo(map);
 
             } else {

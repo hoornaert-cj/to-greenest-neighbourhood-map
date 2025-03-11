@@ -55,6 +55,17 @@ a:hover {
     margin-top: 0;
 }
 
+.checkbox-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.top-checkbox {
+    padding-right: 1rem;
+}
+
 .map-container {
     width: 60%;
     height: 70vh;
