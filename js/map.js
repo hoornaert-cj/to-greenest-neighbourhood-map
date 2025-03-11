@@ -36,12 +36,19 @@ document.addEventListener("DOMContentLoaded", function () {
                         };
                     },
                     onEachFeature: function (feature, layer) {
+                        //tooltips
+                        layer.bindTooltip(feature.properties.AREA_NAME, {
+                            permanent: false,
+                            direction: "top",
+                            className: "neighbourhood-tooltip"
+                        })
+                        //hover styling
                         layer.on({
                             mouseover: function(e) {
                                 var layer = e.target;
                                 layer.setStyle({
                                     fillColor: '#FEFFBE',
-                                    fillOpacity: 0.25,
+                                    fillOpacity: 0.45,
                                     dashArray: '5, 5',
                                     lineCap: 'round',
                                     lineJoin: 'round'
@@ -60,6 +67,8 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 console.error('Invalid GeoJSON data');
             }
+
+            map.fitBounds(geoJsonLayer.getBounds());
         })
         .catch(error => console.error('Error loading GeoJSON', error));
 });
