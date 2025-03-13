@@ -1,7 +1,7 @@
 var map;
 var geoJsonLayer;
-let top5 = [];
-let bottom5 = [];
+// let top5 = [];
+// let bottom5 = [];
 
 // map.addLayer(top5Layer);
 // map.addLayer(bottom5Layer);
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         });
 
                         let popupContent =
-                        `<img src="images/maple-leaf.svg" alt="Maple Leaf" style="display: block; margin: 0 auto; width: 2rem; height: 2rem;">
+                        `<img src="images/maple-leaf.svg" alt="Maple Leaf" style="display: block; margin: 0 auto; width: 1.5rem; height: 1.5rem;">
                         <strong>${feature.properties.AREA_NAME}</strong><br>
                         Rank: ${feature.properties.rank} <br>
                         Green Space: ${feature.properties["pct-green"]}%`;
@@ -132,16 +132,18 @@ document.addEventListener("DOMContentLoaded", function () {
     let bottom5Layer = L.layerGroup();
 
     function addTop5Markers() {
+        top5Layer.clearLayers();
         top5.forEach(feature => {
-            let centroid = turf.centroid(feature); // Get centroid
-            let coords = centroid.geometry.coordinates; // Extract coordinates
+            let centroid = turf.centroid(feature);
+            let coords = centroid.geometry.coordinates;
 
             let icon = L.icon({
                 iconUrl: `images/top5-rank${feature.properties.rank}.svg`,
-                iconSize: [32, 32],
+                iconSize: [36, 36],
                 iconAnchor: [16, 32],
-                popupAnchor: [0, -32]
+                popupAnchor: [0, 0]
             });
+
 
             let marker = L.marker([coords[1], coords[0]], { icon: icon });
             top5Layer.addLayer(marker);
@@ -156,6 +158,39 @@ document.addEventListener("DOMContentLoaded", function () {
             addTop5Markers();
         } else {
             map.removeLayer(top5Layer);
+        }
+    });
+
+    function addBottom5Markers() {
+        bottom5Layer.clearLayers();
+        bottom5.forEach(feature => {
+            let rank = feature.properties.rank;
+            let bottomRank = 159 - rank;
+
+            let centroid = turf.centroid(feature); // Get centroid
+            let coords = centroid.geometry.coordinates; // Extract coordinates
+
+            let icon = L.icon({
+                iconUrl: `images/bottom5-rank${feature.properties.rank}.svg`,
+                iconSize: [36, 36],
+                iconAnchor: [16, 32],
+                popupAnchor: [0, 0]
+            });
+
+
+            let marker = L.marker([coords[1], coords[0]], { icon: icon });
+            bottom5Layer.addLayer(marker);
+        });
+
+        map.addLayer(bottom5Layer);  // ✅ Ensure the layer is added to the map
+    }
+
+    // Toggle checkbox behavior
+    document.getElementById("bottom5").addEventListener("change", function() {
+        if (this.checked) {
+            addBottom5Markers();
+        } else {
+            map.removeLayer(bottom5Layer);
         }
     });
 //     function updateStyles() {
