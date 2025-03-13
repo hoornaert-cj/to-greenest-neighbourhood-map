@@ -3,6 +3,11 @@ var geoJsonLayer;
 let top5 = [];
 let bottom5 = [];
 
+// map.addLayer(top5Layer);
+// map.addLayer(bottom5Layer);
+// map.removeLayer(top5Layer);
+// map.removeLayer(bottom5Layer);
+
 document.addEventListener("DOMContentLoaded", function () {
     // Initialize the map only once
     if (!map) {
@@ -49,6 +54,14 @@ document.addEventListener("DOMContentLoaded", function () {
                             className: "neighbourhood-tooltip"
                         });
 
+                        let popupContent =
+                        `<img src="images/maple-leaf.svg" alt="Maple Leaf" style="display: block; margin: 0 auto; width: 2rem; height: 2rem;">
+                        <strong>${feature.properties.AREA_NAME}</strong><br>
+                        Rank: ${feature.properties.rank} <br>
+                        Green Space: ${feature.properties["pct-green"]}%`;
+
+                        layer.bindPopup(popupContent);
+
                         layer.on({
                             mouseover: function (e) {
                                 e.target.setStyle({
@@ -58,17 +71,44 @@ document.addEventListener("DOMContentLoaded", function () {
                                 });
                             },
                             mouseout: function (e) {
-                                geoJsonLayer.resetStyle(e.target);
-                                updateStyles();
+                                // Ensure geoJsonLayer is defined before calling resetStyle
+                                if (typeof geoJsonLayer !== 'undefined') {
+                                    geoJsonLayer.resetStyle(e.target);
+                                }
+                            },
+
+                            click: function(e) {
+                                e.target.setStyle({
+                                    weight: 0,
+                                    color: "transparent",
+                                    stroke: false
+                                });
+
+                                // Prevent Leaflet from adding focus styles
+                                setTimeout(() => {
+                                    document.activeElement.blur();
+                                }, 0);
                             }
                         });
                     }
                 }).addTo(map);
 
                 // Add event listeners for checkboxes inside the DOMContentLoaded listener
-                document.getElementById("top5").addEventListener("change", updateStyles);
-                document.getElementById("bottom5").addEventListener("change", updateStyles);
+                document.getElementById("top5").addEventListener("change", function() {
+                    if (this.checked) {
+                        addTop5Markers();
+                    } else {
+                        removeTop5Markers();
+                    }
+                });
 
+                document.getElementById("bottom5").addEventListener("change", function() {
+                    if (this.checked) {
+                        addBottom5Markers();
+                    } else {
+                        removeBottom5Markers();
+                    }
+                });
                 map.fitBounds(geoJsonLayer.getBounds());
             } else {
                 console.error('Invalid GeoJSON data');
@@ -84,30 +124,81 @@ document.addEventListener("DOMContentLoaded", function () {
                rank <= 80 ? '#219D57' :
                rank <= 100 ? '#2DAF64' :
                rank <= 120 ? '#3AC078' :
-                             '#4D9966';
+               rank <= 140 ? '#44e08cff' :
+                             '#4dffa0ff';
     }
 
-    function updateStyles() {
-        geoJsonLayer.eachLayer(layer => {
-            let feature = layer.feature;
+    let top5Layer = L.layerGroup();
+    let bottom5Layer = L.layerGroup();
 
-            if (document.getElementById("top5").checked && top5.some(f => f.properties.AREA_NAME === feature.properties.AREA_NAME)) {
-                layer.setStyle({
-                    color: 'gold',
-                    weight: 6
-                });
-            } else if (document.getElementById("bottom5").checked && bottom5.some(f => f.properties.AREA_NAME === feature.properties.AREA_NAME)) {
-                layer.setStyle({
-                    fillColor:  'rgba(0, 0, 0, 0.5)',
-                    color: 'yellow',
-                    weight: 6,
+    function addTop5Markers() {
+        top5.forEach(feature => {
+            let centroid = turf.centroid(feature); // Get centroid
+            let coords = centroid.geometry.coordinates; // Extract coordinates
 
-                });
-            } else {
-                layer.setStyle({
-                    color: 'white',
-                    weight: 1.5
-                });
-            }
+            let icon = L.icon({
+                iconUrl: `images/top5-rank${feature.properties.rank}.svg`,
+                iconSize: [32, 32],
+                iconAnchor: [16, 32],
+                popupAnchor: [0, -32]
+            });
+
+            let marker = L.marker([coords[1], coords[0]], { icon: icon });
+            top5Layer.addLayer(marker);
         });
+
+        map.addLayer(top5Layer);  // ✅ Ensure the layer is added to the map
     }
+
+    // Toggle checkbox behavior
+    document.getElementById("top5").addEventListener("change", function() {
+        if (this.checked) {
+            addTop5Markers();
+        } else {
+            map.removeLayer(top5Layer);
+        }
+    });
+//     function updateStyles() {
+//     geoJsonLayer.eachLayer(layer => {
+//         let feature = layer.feature;
+//         let icon;  // Initialize icon variable
+
+//         // Check if the layer is a marker (this ensures setIcon can be applied)
+//         if (layer instanceof L.Marker) {
+//             // Check if the feature is in the Top 5
+//             if (document.getElementById("top5").checked && top5.some(f => f.properties.AREA_NAME === feature.properties.AREA_NAME)) {
+//                 let rank = top5.find(f => f.properties.AREA_NAME === feature.properties.AREA_NAME).properties.rank;
+//                 // Check if the rank is between 1 and 5
+//                 if (rank >= 1 && rank <= 5) {
+//                     icon = L.icon({
+//                         iconUrl: `images/top5-rank${rank}.svg`,  // Use forward slashes for file path
+//                         iconSize: [32, 32],
+//                         iconAnchor: [16, 32],
+//                         popupAnchor: [0, -32]
+//                     });
+//                 }
+//             }
+//             // Check if the feature is in the Bottom 5
+//             else if (document.getElementById("bottom5").checked && bottom5.some(f => f.properties.AREA_NAME === feature.properties.AREA_NAME)) {
+//                 let rank = bottom5.find(f => f.properties.AREA_NAME === feature.properties.AREA_NAME).properties.rank;
+//                 // Reverse the rank order for bottom 5
+//                 let bottomRank = 159 - rank;  // Adjust this if the rank range is different
+//                 // Check if the rank is between 1 and 5 for Bottom 5
+//                 if (bottomRank >= 1 && bottomRank <= 5) {
+//                     icon = L.icon({
+//                         iconUrl: `images/bottom5-rank${bottomRank}.svg`,  // Use forward slashes for file path
+//                         iconSize: [32, 32],
+//                         iconAnchor: [16, 32],
+//                         popupAnchor: [0, -32]
+//                     });
+//                 }
+//             }
+
+//             // If an icon is determined, set it to the marker
+//             if (icon) {
+//                 console.log(`Setting icon: ${icon.options.iconUrl}`);  // Debugging line
+//                 layer.setIcon(icon);
+//             }
+//         }
+//     });
+// }

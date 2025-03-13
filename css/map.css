@@ -98,15 +98,14 @@ a:hover {
     animation: zoomIn 1s ease-out;
   }
 
-.leaflet-popup-content-wrapper,
-.neighbourhood-tooltip {
+.leaflet-popup-content-wrapper {
     background: linear-gradient(to bottom right, #4D9966, #338855, #1F7744, #0A6633, #005522);
     border: 0.5px solid #005522;
     color: #fcfcc0;
     font-family: 'Open Sans', sans-serif;
-    font-size: 1rem;
-    border-radius: 8px;
-    padding: 10px;
+    font-size: 1.1rem;
+    border-radius: 0.5rem;
+    padding: 0.625rem;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
 
     text-shadow:
@@ -117,11 +116,38 @@ a:hover {
          1px  1px 2px rgba(0, 0, 0, 0.2);
 }
 
+.neighbourhood-tooltip {
+    background: linear-gradient(to bottom right, #88C996, #60A875, #3C7E55, #257A3A);
+    border: 0.5px solid #257A3A;
+    color: #fff;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1rem; /* Smaller font size to match typical tooltip usage */
+    padding: 5px;
+    border-radius: 6px;
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* disable Leaflet's default click outline */
+.leaflet-container a {
+    outline: none !important;
+}
+
+.leaflet-interactive:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 .leaflet-popup-content {
     max-width: 90%;
 }
 .leaflet-popup-tip {
     background-color: #005522;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+outline: none !important;
+box-shadow: none !important;
 }
 
 .leaflet-popup-close-button span {
@@ -232,6 +258,7 @@ a:hover {
         margin-bottom: 1rem;
         overflow-y: auto;
     }
+
 
     .leaflet-popup-content-wrapper {
         font-size: 0.9rem;
