@@ -1,12 +1,6 @@
 var map;
 var geoJsonLayer;
-// let top5 = [];
-// let bottom5 = [];
 
-// map.addLayer(top5Layer);
-// map.addLayer(bottom5Layer);
-// map.removeLayer(top5Layer);
-// map.removeLayer(bottom5Layer);
 
 document.addEventListener("DOMContentLoaded", function () {
     // Initialize the map only once
@@ -149,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
             top5Layer.addLayer(marker);
         });
 
-        map.addLayer(top5Layer);  // ✅ Ensure the layer is added to the map
+        map.addLayer(top5Layer);
     }
 
     // Toggle checkbox behavior
@@ -182,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
             bottom5Layer.addLayer(marker);
         });
 
-        map.addLayer(bottom5Layer);  // ✅ Ensure the layer is added to the map
+        map.addLayer(bottom5Layer);
     }
 
     // Toggle checkbox behavior
@@ -193,47 +187,3 @@ document.addEventListener("DOMContentLoaded", function () {
             map.removeLayer(bottom5Layer);
         }
     });
-//     function updateStyles() {
-//     geoJsonLayer.eachLayer(layer => {
-//         let feature = layer.feature;
-//         let icon;  // Initialize icon variable
-
-//         // Check if the layer is a marker (this ensures setIcon can be applied)
-//         if (layer instanceof L.Marker) {
-//             // Check if the feature is in the Top 5
-//             if (document.getElementById("top5").checked && top5.some(f => f.properties.AREA_NAME === feature.properties.AREA_NAME)) {
-//                 let rank = top5.find(f => f.properties.AREA_NAME === feature.properties.AREA_NAME).properties.rank;
-//                 // Check if the rank is between 1 and 5
-//                 if (rank >= 1 && rank <= 5) {
-//                     icon = L.icon({
-//                         iconUrl: `images/top5-rank${rank}.svg`,  // Use forward slashes for file path
-//                         iconSize: [32, 32],
-//                         iconAnchor: [16, 32],
-//                         popupAnchor: [0, -32]
-//                     });
-//                 }
-//             }
-//             // Check if the feature is in the Bottom 5
-//             else if (document.getElementById("bottom5").checked && bottom5.some(f => f.properties.AREA_NAME === feature.properties.AREA_NAME)) {
-//                 let rank = bottom5.find(f => f.properties.AREA_NAME === feature.properties.AREA_NAME).properties.rank;
-//                 // Reverse the rank order for bottom 5
-//                 let bottomRank = 159 - rank;  // Adjust this if the rank range is different
-//                 // Check if the rank is between 1 and 5 for Bottom 5
-//                 if (bottomRank >= 1 && bottomRank <= 5) {
-//                     icon = L.icon({
-//                         iconUrl: `images/bottom5-rank${bottomRank}.svg`,  // Use forward slashes for file path
-//                         iconSize: [32, 32],
-//                         iconAnchor: [16, 32],
-//                         popupAnchor: [0, -32]
-//                     });
-//                 }
-//             }
-
-//             // If an icon is determined, set it to the marker
-//             if (icon) {
-//                 console.log(`Setting icon: ${icon.options.iconUrl}`);  // Debugging line
-//                 layer.setIcon(icon);
-//             }
-//         }
-//     });
-// }
